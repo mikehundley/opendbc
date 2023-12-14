@@ -10,7 +10,7 @@ jobs:
     name: pre-commit autoupdate
     runs-on: ubuntu-20.04
     container:
-      image: ghcr.io/commaai/opendbc:latest
+      image: ghcr.io/mikehundley/opendbc:master
     steps:
     - uses: actions/checkout@v3
     - name: pre-commit autoupdate
