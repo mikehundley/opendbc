@@ -7,9 +7,9 @@
   .max_torque = (steer), \
   .max_rate_up = (rate_up), \
   .max_rate_down = (rate_down), \
-  .max_rt_delta = 112, \
-  .driver_torque_allowance = 50, \
-  .driver_torque_multiplier = 2, \
+  .max_rt_delta = 224, \
+  .driver_torque_allowance = 350, \
+  .driver_torque_multiplier = 3, \
   .type = TorqueDriverLimited, \
    /* the EPS faults when the steering angle is above a certain threshold for too long. to prevent this, */ \
    /* we allow setting CF_Lkas_ActToi bit to 0 while maintaining the requested torque value for two consecutive frames */ \
@@ -221,8 +221,8 @@ static void hyundai_rx_hook(const CANPacket_t *msg) {
 }
 
 static bool hyundai_tx_hook(const CANPacket_t *msg) {
-  const TorqueSteeringLimits HYUNDAI_STEERING_LIMITS = HYUNDAI_LIMITS(384, 3, 7);
-  const TorqueSteeringLimits HYUNDAI_STEERING_LIMITS_ALT = HYUNDAI_LIMITS(270, 2, 3);
+  const TorqueSteeringLimits HYUNDAI_STEERING_LIMITS = HYUNDAI_LIMITS(384, 8, 8);
+  const TorqueSteeringLimits HYUNDAI_STEERING_LIMITS_ALT = HYUNDAI_LIMITS(345, 3, 3);
   const TorqueSteeringLimits HYUNDAI_STEERING_LIMITS_ALT_2 = HYUNDAI_LIMITS(170, 2, 3);
 
   bool tx = true;

@@ -20,12 +20,11 @@ Ecu = structs.CarParams.Ecu
 # Cancel button can sometimes be ACC pause/resume button, main button can also enable on some cars
 ENABLE_BUTTONS = (ButtonType.accelCruise, ButtonType.decelCruise, ButtonType.cancel, ButtonType.mainCruise)
 
-
 class CarInterface(CarInterfaceBase):
   CarState = CarState
   CarController = CarController
   RadarInterface = RadarInterface
-
+  
   @staticmethod
   def _get_params(ret: structs.CarParams, candidate, fingerprint, car_fw, alpha_long, is_release, docs) -> structs.CarParams:
     ret.brand = "hyundai"
@@ -112,11 +111,14 @@ class CarInterface(CarInterfaceBase):
         ret.flags |= HyundaiFlags.HAS_LDA_BUTTON.value
 
     # Common lateral control setup
-
     ret.centerToFront = ret.wheelbase * 0.4
     ret.steerActuatorDelay = 0.1
     ret.steerLimitTimer = 0.4
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
+    ret.lateralTuning.torque.kpBP = [0., 10., 20., 30., 40.]     # Speed breakpoints in m/s
+    ret.lateralTuning.torque.kpV = [0.6, 0.55, 0.5, 0.55, 0.6]  # kp scaling value
+    ret.lateralTuning.torque.ki = 0.008
+    ret.lateralTuning.torque.kf = 0.97
 
     if ret.flags & HyundaiFlags.ALT_LIMITS:
       ret.safetyConfigs[-1].safetyParam |= HyundaiSafetyFlags.ALT_LIMITS.value
@@ -160,7 +162,7 @@ class CarInterface(CarInterfaceBase):
 
   @staticmethod
   def _get_params_sp(stock_cp: structs.CarParams, ret: structs.CarParamsSP, candidate, fingerprint: dict[int, dict[int, int]],
-                     car_fw: list[structs.CarParams.CarFw], alpha_long: bool, is_release_sp: bool, docs: bool) -> structs.CarParamsSP:
+                     car_fw: list[structs.CarParams.CarFw], alpha_long: bool, docs: bool) -> structs.CarParamsSP:
     # identical logic used in _get_params
     # "LKA steering" if LKAS or LKAS_ALT messages are seen coming from the camera.
     # Generally means our LKAS message is forwarded to another ECU (commonly ADAS ECU)

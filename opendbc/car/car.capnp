@@ -556,6 +556,8 @@ struct CarParams {
     steeringAngleDeadzoneDeg @5 :Float32;
     latAccelFactor @6 :Float32;
     latAccelOffset @7 :Float32;
+    kpBP @8 :List(Float32);
+    kpV @9 :List(Float32);
     useSteeringAngleDEPRECATED @0 :Bool;
   }
 
