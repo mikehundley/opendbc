@@ -41,7 +41,7 @@ class CarControllerParams:
       self.STEER_MAX = int(np.interp(vEgoRaw, breakpoints, values))
 
       ### Dynamic Steer Deltas ###
-      self.STEER_DELTA_UP = stair_step(vEgoRaw, [0., 7.5, 15.], [3.0, 2.0, 1.0])
+      self.STEER_DELTA_UP = stair_step(vEgoRaw, [0., 7.5, 18.5], [3.0, 2.0, 1.0])
       self.STEER_DELTA_DOWN = stair_step(vEgoRaw, [0., 12., 31.], [3.0, 2.0, 1.0])
 
       self.STEER_DRIVER_ALLOWANCE = 350
