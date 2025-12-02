@@ -264,7 +264,7 @@ class CarInterfaceBase(ABC, CarInterfaceBaseSP):
     tune.torque.kpBP = [0.0, 40.0]
     tune.torque.kpV = [0.6, 0.5]
     tune.torque.kf = 0.97
-    tune.torque.ki = 0.01
+    tune.torque.ki = 0.05
     tune.torque.friction = params['FRICTION']
     tune.torque.latAccelFactor = params['LAT_ACCEL_FACTOR']
     tune.torque.latAccelOffset = 0.0

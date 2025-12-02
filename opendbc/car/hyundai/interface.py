@@ -116,8 +116,8 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.4
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
     ret.lateralTuning.torque.kpBP = [0., 10., 20., 30., 40.]     # Speed breakpoints in m/s
-    ret.lateralTuning.torque.kpV = [0.6, 0.55, 0.5, 0.55, 0.6]  # kp scaling value
-    ret.lateralTuning.torque.ki = 0.008
+    ret.lateralTuning.torque.kpV = [0.6, 0.55, 0.5, 0.65, 0.75]  # kp scaling value
+    ret.lateralTuning.torque.ki = 0.05
     ret.lateralTuning.torque.kf = 0.97
 
     if ret.flags & HyundaiFlags.ALT_LIMITS:
