@@ -1,6 +1,13 @@
 import re
 from dataclasses import dataclass, field
 from enum import IntFlag
+import numpy as np
+
+def stair_step(v, breakpoints, values):
+    for i in range(len(breakpoints) - 1, -1, -1):
+        if v >= breakpoints[i]:
+            return values[i]
+    return values[0]
 
 from opendbc.car import Bus, CarSpecs, DbcDict, PlatformConfig, Platforms, uds
 from opendbc.car.common.conversions import Conversions as CV
@@ -17,7 +24,7 @@ class CarControllerParams:
   ACCEL_MIN = -3.5 # m/s
   ACCEL_MAX = 2.0 # m/s
 
-  def __init__(self, CP):
+  def __init__(self, CP, vEgoRaw=10.):
     self.STEER_DELTA_UP = 3
     self.STEER_DELTA_DOWN = 7
     self.STEER_DRIVER_ALLOWANCE = 50
@@ -27,12 +34,19 @@ class CarControllerParams:
     self.STEER_STEP = 1  # 100 Hz
 
     if CP.flags & HyundaiFlags.CANFD:
-      self.STEER_MAX = 270
+      
+      ### Dynamic Steer Max ###
+      breakpoints = [10, 20, 30, 40] # m/s
+      values = [270, 220, 165, 140]
+      self.STEER_MAX = int(np.interp(vEgoRaw, breakpoints, values))
+
+      ### Dynamic Steer Deltas ###
+      self.STEER_DELTA_UP = stair_step(vEgoRaw, [0.0, 30.0], [2.0, 1.0])
+      self.STEER_DELTA_DOWN = stair_step(vEgoRaw, [0.0, 27.5], [3.0, 2.0])
+
       self.STEER_DRIVER_ALLOWANCE = 250
       self.STEER_DRIVER_MULTIPLIER = 2
       self.STEER_THRESHOLD = 250
-      self.STEER_DELTA_UP = 2
-      self.STEER_DELTA_DOWN = 3
 
     # To determine the limit for your car, find the maximum value that the stock LKAS will request.
     # If the max stock LKAS request is <384, add your car to this list.
